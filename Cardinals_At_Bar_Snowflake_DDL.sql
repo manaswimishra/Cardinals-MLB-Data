@@ -54,17 +54,12 @@ CREATE TABLE IF NOT EXISTS `cardinals_at_bats`.`dim_team` (
   `team_id` VARCHAR(3) NOT NULL,
   `league` ENUM('NL','AL') NOT NULL,
   `city` VARCHAR(50) NOT NULL,
-  `state` VARCHAR(3) NOT NULL,
   `mascot` VARCHAR(25) NOT NULL,
-  `ballpark_id` VARCHAR(5) NOT NULL,
-  PRIMARY KEY (`team_id`),
-  CONSTRAINT `dim_ballpark_dim_team_fk` FOREIGN KEY (`ballpark_id`)
-	REFERENCES `cardinals_at_bats`.`dim_ball_oark` (`ballpark_id`)
-	ON DELETE NO ACTION ON UPDATE NO ACTION)
+  PRIMARY KEY (`team_id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
-CREATE INDEX `dim_ballpark_dim_team_fk` ON `cardinals_at_bats`.`dim_team` (`ballpark_id` ASC);
+#CREATE INDEX `dim_ballpark_dim_team_fk` ON `cardinals_at_bats`.`dim_team` (`ballpark_id` ASC);
 
 -- -----------------------------------------------------
 -- Table `cardinals_at_bats`.`dim_game`
@@ -74,18 +69,18 @@ CREATE TABLE IF NOT EXISTS `cardinals_at_bats`.`dim_game` (
   `home_team_id` VARCHAR(3) NOT NULL,
   `away_team_id` VARCHAR(3) NOT NULL,
   PRIMARY KEY (`game_id`),
-  CONSTRAINT `dim_team_dim_game_fk` FOREIGN KEY (`home_team_id`)
+  CONSTRAINT `dim_home_team_dim_game_fk` FOREIGN KEY (`home_team_id`)
         REFERENCES `cardinals_at_bats`.`dim_team` (`team_id`)
         ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `dim_team_dim_game_fk` FOREIGN KEY (`away_team_id`)
+  CONSTRAINT `dim_away_team_dim_game_fk` FOREIGN KEY (`away_team_id`)
     REFERENCES `cardinals_at_bats`.`dim_team` (`team_id`)
     ON DELETE NO ACTION ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 # NOT SURE ABOUT THESE INDEXES
-#CREATE INDEX `dim_home_team_dim_game_fk` ON `cardinals_at_bats`.`dim_game` (`home_team_id` ASC);
-#CREATE INDEX `dim_away_team_dim_game_fk` ON `cardinals_at_bats`.`dim_game` (`away_team_id` ASC);
+CREATE INDEX `dim_home_team_dim_game_fk` ON `cardinals_at_bats`.`dim_game` (`home_team_id` ASC);
+CREATE INDEX `dim_away_team_dim_game_fk` ON `cardinals_at_bats`.`dim_game` (`away_team_id` ASC);
 
 -- -----------------------------------------------------
 -- Table `cardinals_at_bats`.`dim_event`
@@ -113,28 +108,28 @@ CREATE TABLE IF NOT EXISTS `cardinals_at_bats`.`dim_in_field_position` (
   `pos8_fld_id` VARCHAR(8) NOT NULL,
   `pos9_fld_id` VARCHAR(8) NOT NULL,
   PRIMARY KEY (`in_field_position_id`),
-  CONSTRAINT `dim_player_dim_in_field_position_fk` FOREIGN KEY (`pos2_fld_id`)
+  CONSTRAINT `dim_player_dim_in_field_position2_fk` FOREIGN KEY (`pos2_fld_id`)
     REFERENCES `cardinals_at_bats`.`dim_player` (`player_id`)
     ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `dim_player_dim_in_field_position_fk` FOREIGN KEY (`pos3_fld_id`)
+  CONSTRAINT `dim_player_dim_in_field_position3_fk` FOREIGN KEY (`pos3_fld_id`)
     REFERENCES `cardinals_at_bats`.`dim_player` (`player_id`)
     ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `dim_player_dim_in_field_position_fk` FOREIGN KEY (`pos4_fld_id`)
+  CONSTRAINT `dim_player_dim_in_field_position4_fk` FOREIGN KEY (`pos4_fld_id`)
     REFERENCES `cardinals_at_bats`.`dim_player` (`player_id`)
     ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `dim_player_dim_in_field_position_fk` FOREIGN KEY (`pos5_fld_id`)
+  CONSTRAINT `dim_player_dim_in_field_position5_fk` FOREIGN KEY (`pos5_fld_id`)
     REFERENCES `cardinals_at_bats`.`dim_player` (`player_id`)
     ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `dim_player_dim_in_field_position_fk` FOREIGN KEY (`pos6_fld_id`)
+  CONSTRAINT `dim_player_dim_in_field_position6_fk` FOREIGN KEY (`pos6_fld_id`)
     REFERENCES `cardinals_at_bats`.`dim_player` (`player_id`)
     ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `dim_player_dim_in_field_position_fk` FOREIGN KEY (`pos7_fld_id`)
+  CONSTRAINT `dim_player_dim_in_field_position7_fk` FOREIGN KEY (`pos7_fld_id`)
     REFERENCES `cardinals_at_bats`.`dim_player` (`player_id`)
     ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `dim_player_dim_in_field_position_fk` FOREIGN KEY (`pos8_fld_id`)
+  CONSTRAINT `dim_player_dim_in_field_position8_fk` FOREIGN KEY (`pos8_fld_id`)
     REFERENCES `cardinals_at_bats`.`dim_player` (`player_id`)
     ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `dim_player_dim_in_field_position_fk` FOREIGN KEY (`pos9_fld_id`)
+  CONSTRAINT `dim_player_dim_in_field_position9_fk` FOREIGN KEY (`pos9_fld_id`)
     REFERENCES `cardinals_at_bats`.`dim_player` (`player_id`)
     ON DELETE NO ACTION ON UPDATE NO ACTION
     )
@@ -144,7 +139,18 @@ DEFAULT CHARACTER SET = latin1;
 #CREATE INDEX `FILLER` ON `cardinals_at_bats`.`dim_in_field_position` (`FILLER` ASC);
 
 -- -----------------------------------------------------
--- Table `cardinals_at_bats`.`dim_film`
+-- Table `cardinals_at_bats`.`dim_pitch`
+-- -----------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `cardinals_at_bats`.`dim_pitch` (
+  `pitch_id` VARCHAR(10) NOT NULL,
+  `pitch_description` VARCHAR(50) NULL DEFAULT NULL,
+  PRIMARY KEY (`pitch`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+-- -----------------------------------------------------
+-- Table `cardinals_at_bats`.`dim_pitch_sequence`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `cardinals_at_bats`.`dim_pitch_sequence` (
   `pitch_sequence_id` INT(10) NOT NULL AUTO_INCREMENT,
@@ -169,7 +175,107 @@ CREATE TABLE IF NOT EXISTS `cardinals_at_bats`.`dim_pitch_sequence` (
   `pitch_18` VARCHAR(10) NULL DEFAULT NULL,
   `pitch_19` VARCHAR(10) NULL DEFAULT NULL,
   `pitch_20` VARCHAR(10) NULL DEFAULT NULL,
-  PRIMARY KEY (`pitch_sequence_id`))
+  `pitch_21` VARCHAR(10) NULL DEFAULT NULL,
+  `pitch_22` VARCHAR(10) NULL DEFAULT NULL,
+  `pitch_23` VARCHAR(10) NULL DEFAULT NULL,
+  `pitch_24` VARCHAR(10) NULL DEFAULT NULL,
+  `pitch_25` VARCHAR(10) NULL DEFAULT NULL,
+  `pitch_26` VARCHAR(10) NULL DEFAULT NULL,
+  `pitch_27` VARCHAR(10) NULL DEFAULT NULL,
+  `pitch_28` VARCHAR(10) NULL DEFAULT NULL,
+  `pitch_29` VARCHAR(10) NULL DEFAULT NULL,
+  `pitch_30` VARCHAR(10) NULL DEFAULT NULL,
+  PRIMARY KEY (`pitch_sequence_id`),
+  CONSTRAINT `dim_pitch_dim_pitch_1` FOREIGN KEY (`pitch_1`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_2` FOREIGN KEY (`pitch_2`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_3` FOREIGN KEY (`pitch_3`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_4` FOREIGN KEY (`pitch_4`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_5` FOREIGN KEY (`pitch_5`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_6` FOREIGN KEY (`pitch_6`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_7` FOREIGN KEY (`pitch_7`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_8` FOREIGN KEY (`pitch_8`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_9` FOREIGN KEY (`pitch_9`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_10` FOREIGN KEY (`pitch_10`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_11` FOREIGN KEY (`pitch_11`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_12` FOREIGN KEY (`pitch_12`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_13` FOREIGN KEY (`pitch_13`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_14` FOREIGN KEY (`pitch_14`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_15` FOREIGN KEY (`pitch_15`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_16` FOREIGN KEY (`pitch_16`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_17` FOREIGN KEY (`pitch_17`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_18` FOREIGN KEY (`pitch_18`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_19` FOREIGN KEY (`pitch_19`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_20` FOREIGN KEY (`pitch_20`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_21` FOREIGN KEY (`pitch_21`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_22` FOREIGN KEY (`pitch_22`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_23` FOREIGN KEY (`pitch_23`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_24` FOREIGN KEY (`pitch_24`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_25` FOREIGN KEY (`pitch_25`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_26` FOREIGN KEY (`pitch_26`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_27` FOREIGN KEY (`pitch_27`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_28` FOREIGN KEY (`pitch_28`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_29` FOREIGN KEY (`pitch_29`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `dim_pitch_dim_pitch_30` FOREIGN KEY (`pitch_30`)
+    REFERENCES `cardinals_at_bats`.`dim_pitch` (`pitch_id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
@@ -182,18 +288,103 @@ DEFAULT CHARACTER SET = latin1;
 CREATE TABLE IF NOT EXISTS `cardinals_at_bats`.`fact_at_bat` (
   `at_bat_id` INT(15) NOT NULL AUTO_INCREMENT,
   `game_id` INT(9) NOT NULL,
-  `inning` TINYINT(1) NOT NULL,
+  `inning` TINYINT(1) NULL,
   `batter_id` VARCHAR(8) NOT NULL,
-  `batter_hand`	ENUM('L','R') NOT NULL,
+  `batter_hand`	ENUM('L','R') NULL,
   `result_batter_id` VARCHAR(8) NOT NULL,
-  `result_batter_hand` ENUM('L','R') NOT NULL,
-  
-  
+  `result_batter_hand` ENUM('L','R') NULL,
+  `pitcher_id` VARCHAR(8) NOT NULL,
+  `pitcher_hand` ENUM('L','R') NULL,
+  `result_pitcher_id` VARCHAR(8) NOT NULL,
+  `result_pitcher_hand` ENUM('L','R') NULL,
+  `batter_team` BINARY(2) NULL,
+  `outs_ct` TINYINT(1) NULL,
+  `balls_ct` TINYINT(1) NULL,
+  `strikes_ct` TINYINT(1) NULL,
+  `pitch_sequence_id` INT(10) NOT NULL,
+  `away_score_ct` INT(2) NULL,
+  `home_score_ct` INT(2) NULL,
+  `in_field_position_id` INT(10) NOT NULL,
+  `base1_run_id` VARCHAR(8) NOT NULL,
+  `base2_run_id` VARCHAR(8) NOT NULL,
+  `base3_run_id` VARCHAR(8) NOT NULL,
+  `event_tx` VARCHAR(45) NULL,
+  `event_id` INT(2) NOT NULL,
+  `leadoff_fl` ENUM('T','F') NULL,
+  `pinch_hit_fl` ENUM('T','F') NULL,
+  `batter_field_position` INT(2) NULL,
+  `batter_lineup` INT(2) NULL,
+  `batter_event_fl`	ENUM('T','F') NULL,
+  `hit_value` SMALLINT(5) NULL,
+  `sacrifice_hit_fl` ENUM('T','F') NULL,
+  `sacrifice_fly_fl` ENUM('T','F') NULL,
+  `event_outs_ct` SMALLINT(5) NULL,
+  `double_play_fl` ENUM('T','F') NULL,
+  `triple_play_fl` ENUM('T','F') NULL,
+  `rbi_ct` TINYINT(1) NULL,
+  `wild_pitch_fl` ENUM('T','F') NULL,
+  `passed_ball_fl` ENUM('T','F') NULL,
+  `fielder_position` VARCHAR(8) NULL,
+  `batted_ball_type` VARCHAR(1) NULL,
+  `bunt_fl` ENUM('T','F') NULL,
+  `foul_fl` ENUM('T','F') NULL,
+  `battedball_loc_tx` VARCHAR(3) NULL,
+  `error_ct` TINYINT(1) NULL,
+  `error1_fielder` INT(1) NULL,
+  `error1_type`	VARCHAR(1) NULL,
+  `error2_fielder` INT(1) NULL,
+  `error2_type`	VARCHAR(1) NULL,
+  `error3_fielder` INT(1) NULL,
+  `error3_type`	VARCHAR(1) NULL,
+  `batter_destination` INT(1) NULL,
+  `runner1_destination`	INT(1) NULL,
+  `runner2_destination`	INT(1) NULL,
+  `runner3_destination`	INT(1) NULL,
+  `bat_play_tx`	VARCHAR(50) NULL,
+  `run1_play_tx` VARCHAR(50) NULL,
+  `run2_play_tx` VARCHAR(50) NULL,
+  `run3_play_tx` VARCHAR(50) NULL,
+  `runner1_stolen_base_fl` ENUM('T','F') NULL,
+  `runner2_stolen_base_fl` ENUM('T','F') NULL,
+  `runner3_stolen_base_fl` ENUM('T','F') NULL,
+  `runner1_caught_stealing_fl` ENUM('T','F') NULL,
+  `runner2_caught_stealing_fl` ENUM('T','F') NULL,
+  `runner3_caught_stealing_fl` ENUM('T','F') NULL,
+  `runner1_picked_off_fl` ENUM('T','F') NULL,
+  `runner2_picked_off_fl` ENUM('T','F') NULL,
+  `runner3_picked_off_fl` ENUM('T','F') NULL,
+  `run1_resp_pit_id` VARCHAR(8) NULL,
+  `run2_resp_pit_id` VARCHAR(8) NULL,
+  `run3_resp_pit_id` VARCHAR(8) NULL,
+  `pinch_runner1_fl` ENUM('T','F') NULL,
+  `pinch_runner2_fl` ENUM('T','F') NULL,
+  `pinch_runner3_fl` ENUM('T','F') NULL,
+  `removed_for_pinch_runner1_id` VARCHAR(8) NULL,
+  `removed_for_pinch_runner2_id` VARCHAR(8) NULL,
+  `removed_for_pinch_runner3_id` VARCHAR(8) NULL,
+  `removed_for_pinch_hitter_id`	VARCHAR(8) NULL,
+  `removed_for_pinch_hitter_batter_field_position` INT(1) NULL,
+  `po1_fld_cd` INT(1) NULL,
+  `po2_fld_cd` INT(1) NULL,
+  `po3_fld_cd` INT(1) NULL,
+  `ass1_fld_cd`	INT(1) NULL,
+  `ass2_fld_cd`	INT(1) NULL,
+  `ass3_fld_cd`	INT(1) NULL,
+  `ass4_fld_cd`	INT(1) NULL,
+  `ass5_fld_cd`	INT(1) NULL,
+  `at_bat_counter` INT(3) NULL,
   PRIMARY KEY (`at_bat_id`),
 	INDEX `fk_fact_at_bat_dim_game_idx` (`game_id` ASC),
     INDEX `fk_fact_at_bat_dim_Player_idx1` (`batter_id` ASC),
     INDEX `fk_fact_at_bat_dim_Player_idx2` (`result_batter_id` ASC),
-    
+    INDEX `fk_fact_at_bat_dim_Player_idx3` (`pitcher_id` ASC),
+	INDEX `fk_fact_at_bat_dim_Player_idx4` (`result_pitcher_id` ASC),
+    INDEX `fk_fact_at_bat_pitch_sequence` (`pitch_sequence_id` ASC),
+    INDEX `fl_fact_at_bad_in_field_position` (`in_field_position_id` ASC),
+    INDEX `fk_fact_at_bat_dim_Player_idx5` (`base1_run_id` ASC),
+    INDEX `fk_fact_at_bat_dim_Player_idx6` (`base2_run_id` ASC),
+    INDEX `fk_fact_at_bat_dim_Player_idx7` (`base3_run_id` ASC),
+    INDEX `fk_fact_at_bat_dim_event` (`event_id` ASC),
     CONSTRAINT `fk_fact_at_bat_dim_game` FOREIGN KEY (`game_id`)
         REFERENCES `cardinals_at_bats`.`dim_game` (`game_id`)
         ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -202,8 +393,31 @@ CREATE TABLE IF NOT EXISTS `cardinals_at_bats`.`fact_at_bat` (
         ON DELETE NO ACTION ON UPDATE NO ACTION,
     CONSTRAINT `fk_fact_at_bat_dim_result_batter` FOREIGN KEY (`result_batter_id`)
         REFERENCES `cardinals_at_bats`.`dim_player` (`player_id`)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+	CONSTRAINT `fk_fact_at_bat_dim_pitcher` FOREIGN KEY (`pitcher_id`)
+        REFERENCES `cardinals_at_bats`.`dim_player` (`player_id`)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+	CONSTRAINT `fk_fact_at_bat_dim_result_pitcher` FOREIGN KEY (`result_pitcher_id`)
+        REFERENCES `cardinals_at_bats`.`dim_player` (`player_id`)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+	CONSTRAINT `fk_fact_at_bat_dim_pitch_sequence` FOREIGN KEY (`pitch_sequence_id`)
+        REFERENCES `cardinals_at_bats`.`dim_pitch_sequence` (`pitch_sequence_id`)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+	CONSTRAINT `fk_fact_at_bat_dim_in_field_position` FOREIGN KEY (`in_field_position_id`)
+        REFERENCES `cardinals_at_bats`.`dim_in_field_position` (`in_field_position_id`)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+	CONSTRAINT `fk_fact_at_bat_dim_base1_run` FOREIGN KEY (`base1_run_id`)
+        REFERENCES `cardinals_at_bats`.`dim_player` (`player_id`)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+	CONSTRAINT `fk_fact_at_bat_dim_base2_run` FOREIGN KEY (`base2_run_id`)
+        REFERENCES `cardinals_at_bats`.`dim_player` (`player_id`)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+	CONSTRAINT `fk_fact_at_bat_dim_base3_run` FOREIGN KEY (`base3_run_id`)
+        REFERENCES `cardinals_at_bats`.`dim_player` (`player_id`)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+	CONSTRAINT `fk_fact_at_bat_dim_event` FOREIGN KEY (`event_id`)
+        REFERENCES `cardinals_at_bats`.`dim_event` (`event_id`)
         ON DELETE NO ACTION ON UPDATE NO ACTION
-        
         ) 
 ENGINE = InnoDB DEFAULT CHARACTER SET = latin1;
 
