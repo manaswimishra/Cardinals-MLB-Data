@@ -1,31 +1,31 @@
 TeamAbbreviation,League,City,Nickname,FirstYear,LastYear
+SEA,AL,Seattle,Mariners,1977,2010
 CHN,NL,Chicago,Cubs,1876,2010
-PHI,NL,Philadelphia,Phillies,1883,2010
+CLE,AL,Cleveland,Indians,1901,2010
+TOR,AL,Toronto,Blue Jays,1977,2010
+HOU,NL,Houston,Colts,1962,2010
+KCA,AL,Kansas City,Royals,1969,2010
+MIN,AL,Minnesota,Twins,1961,2010
+DET,AL,Detroit,Tigers,1901,2010
+TBA,AL,Tampa Bay,Devil Rays,1998,2010
+SFN,NL,San Francisco,Giants,1958,2010
+ANA,AL,Anaheim,Angels,1997,2010
+LAN,NL,Los Angeles,Dodgers,1958,2010
 PIT,NL,Pittsburgh,Pirates,1887,2010
+MIL,AL,Milwaukee,Brewers,1970,1997
+MIL,NL,Milwaukee,Brewers,1998,2010
+PHI,NL,Philadelphia,Phillies,1883,2010
+NYA,AL,New York,Yankees,1903,2010
 CIN,NL,Cincinnati,Reds,1890,2010
 SLN,NL,St. Louis,Cardinals,1892,2010
-BOS,AL,Boston,Red Sox,1901,2010
-CHA,AL,Chicago,White Sox,1901,2010
-CLE,AL,Cleveland,Indians,1901,2010
-DET,AL,Detroit,Tigers,1901,2010
-NYA,AL,New York,Yankees,1903,2010
-BAL,AL,Baltimore,Orioles,1954,2010
-LAN,NL,Los Angeles,Dodgers,1958,2010
-SFN,NL,San Francisco,Giants,1958,2010
-MIN,AL,Minnesota,Twins,1961,2010
-HOU,NL,Houston,Colts,1962,2010
-NYN,NL,New York,Mets,1962,2010
-ATL,NL,Atlanta,Braves,1966,2010
-OAK,AL,Oakland,Athletics,1968,2010
-KCA,AL,Kansas City,Royals,1969,2010
-SDN,NL,San Diego,Padres,1969,2010
-TEX,AL,Texas,Rangers,1972,2010
-TOR,AL,Toronto,Blue Jays,1977,2010
-SEA,AL,Seattle,Mariners,1977,2010
-FLO,NL,Florida,Marlins,1993,2010
 COL,NL,Colorado,Rockies,1993,2010
-ANA,AL,Anaheim,Angels,1997,2010
-TBA,AL,Tampa Bay,Devil Rays,1998,2010
+SDN,NL,San Diego,Padres,1969,2010
+CHA,AL,Chicago,White Sox,1901,2010
 ARI,NL,Arizona,Diamondbacks,1998,2010
-MIL,NL,Milwaukee,Brewers,1998,2010
 WAS,NL,Washington,Nationals,2005,2010
+ATL,NL,Atlanta,Braves,1966,2010
+NYN,NL,New York,Mets,1962,2010
+BAL,AL,Baltimore,Orioles,1954,2010
+BOS,AL,Boston,Red Sox,1901,2010
+OAK,AL,Oakland,Athletics,1968,2010
+TEX,AL,Texas,Rangers,1972,2010
