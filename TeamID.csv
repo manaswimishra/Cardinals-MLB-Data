@@ -12,7 +12,6 @@ SFN,NL,San Francisco,Giants,1958,2010
 ANA,AL,Anaheim,Angels,1997,2010
 LAN,NL,Los Angeles,Dodgers,1958,2010
 PIT,NL,Pittsburgh,Pirates,1887,2010
-MIL,AL,Milwaukee,Brewers,1970,1997
 MIL,NL,Milwaukee,Brewers,1998,2010
 PHI,NL,Philadelphia,Phillies,1883,2010
 NYA,AL,New York,Yankees,1903,2010
@@ -29,3 +28,4 @@ BAL,AL,Baltimore,Orioles,1954,2010
 BOS,AL,Boston,Red Sox,1901,2010
 OAK,AL,Oakland,Athletics,1968,2010
 TEX,AL,Texas,Rangers,1972,2010
+FLO,NL,Florida,Marlins,1993,2010

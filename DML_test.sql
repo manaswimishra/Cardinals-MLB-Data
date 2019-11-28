@@ -1,5 +1,5 @@
 use MLB;
-SELECT * FROM mlb.mlbdatatransformations_2010;
+SELECT * FROM mlb.mlbdatatransformations;
 SELECT * FROM teamid;
 SELECT * FROM ballparkid;
 SELECT DISTINCT GAME_ID FROM 2018stlouscardinalsatbat; 
@@ -244,10 +244,19 @@ FROM
     
 SELECT * FROM cardinals_at_bats.dim_in_field_position;
 
-SELECT * FROM cardinals_at_bats.dim_pitch;
+SELECT * FROM cardinals_at_bats.dim_pitch_sequence;
 
 SELECT * 
-FROM mlb.mlbdatatransformations_2010
+FROM mlb.mlbdatatransformations
 WHERE leadoff_fl = 'TRUE';
 
+SELECT batter_team FROM mlb.mlbdatatransformations;
+
+SELECT home_team_id, away_team_id FROM  mlb.mlbdatatransformations WHERE home_team_id = 'FLO' or away_team_id = 'FLO';
+
+SELECT * FROM cardinals_at_bats.fact_at_bat; 
+
+SELECT * FROM mlb.pitchid;
+
+SELECT * FROM mlb.eventid;
 

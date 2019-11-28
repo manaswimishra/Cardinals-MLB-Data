@@ -7,7 +7,90 @@
 ** Date:   11/23/2019
 ************************************************/
 
-USE `cardinals_at_bats` ;
+Use MLB;
+
+-- -----------------------------------------------------
+-- Convert MLB date from STRING to DATETIME
+-- -----------------------------------------------------
+    
+ALTER TABLE `MLB`.`mlbdatatransformations` 
+CHANGE COLUMN `date` `date` DATETIME NULL DEFAULT NULL ;
+
+-- -----------------------------------------------------
+-- Update Empty Columns to NULL in MLB data
+-- -----------------------------------------------------
+
+UPDATE mlb.mlbdatatransformations
+SET
+	base1_run_id = CASE base1_run_id WHEN '' THEN NULL ELSE base1_run_id END,
+    base2_run_id = CASE base2_run_id WHEN '' THEN NULL ELSE base2_run_id END,
+    base3_run_id = CASE base3_run_id WHEN '' THEN NULL ELSE base3_run_id END,
+	pitch_1 = CASE pitch_1 WHEN '' THEN NULL ELSE pitch_1 END,
+    pitch_2 = CASE pitch_2 WHEN '' THEN NULL ELSE pitch_2 END,
+    pitch_3 = CASE pitch_3 WHEN '' THEN NULL ELSE pitch_3 END,
+    pitch_4 = CASE pitch_4 WHEN '' THEN NULL ELSE pitch_4 END,
+    pitch_5 = CASE pitch_5 WHEN '' THEN NULL ELSE pitch_5 END,
+    pitch_6 = CASE pitch_6 WHEN '' THEN NULL ELSE pitch_6 END,
+    pitch_7 = CASE pitch_7 WHEN '' THEN NULL ELSE pitch_7 END,
+    pitch_8 = CASE pitch_8 WHEN '' THEN NULL ELSE pitch_8 END,
+    pitch_9 = CASE pitch_9 WHEN '' THEN NULL ELSE pitch_9 END,
+    pitch_10 = CASE pitch_10 WHEN '' THEN NULL ELSE pitch_10 END,
+    pitch_11 = CASE pitch_11 WHEN '' THEN NULL ELSE pitch_11 END,
+    pitch_12 = CASE pitch_12 WHEN '' THEN NULL ELSE pitch_12 END,
+    pitch_13 = CASE pitch_13 WHEN '' THEN NULL ELSE pitch_13 END,
+    pitch_14 = CASE pitch_14 WHEN '' THEN NULL ELSE pitch_14 END,
+    pitch_15 = CASE pitch_15 WHEN '' THEN NULL ELSE pitch_15 END,
+    pitch_16 = CASE pitch_16 WHEN '' THEN NULL ELSE pitch_16 END,
+    pitch_17 = CASE pitch_17 WHEN '' THEN NULL ELSE pitch_17 END,
+    pitch_18 = CASE pitch_18 WHEN '' THEN NULL ELSE pitch_18 END,
+    pitch_19 = CASE pitch_19 WHEN '' THEN NULL ELSE pitch_19 END,
+    pitch_20 = CASE pitch_20 WHEN '' THEN NULL ELSE pitch_20 END,
+    pitch_21 = CASE pitch_21 WHEN '' THEN NULL ELSE pitch_21 END,
+    pitch_22 = CASE pitch_22 WHEN '' THEN NULL ELSE pitch_22 END,
+    pitch_23 = CASE pitch_23 WHEN '' THEN NULL ELSE pitch_23 END,
+    pitch_24 = CASE pitch_24 WHEN '' THEN NULL ELSE pitch_24 END,
+    pitch_25 = CASE pitch_25 WHEN '' THEN NULL ELSE pitch_25 END,
+    pitch_26 = CASE pitch_26 WHEN '' THEN NULL ELSE pitch_26 END,
+    pitch_27 = CASE pitch_27 WHEN '' THEN NULL ELSE pitch_27 END,
+    pitch_28 = CASE pitch_28 WHEN '' THEN NULL ELSE pitch_28 END,
+    pitch_29 = CASE pitch_29 WHEN '' THEN NULL ELSE pitch_29 END,
+    pitch_30 = CASE pitch_30 WHEN '' THEN NULL ELSE pitch_30 END
+;
+
+-- -----------------------------------------------------
+-- Insert into Event ID table in MLB
+# had to manually add this as SQL was not pulling the full dataset from csv
+-- -----------------------------------------------------
+
+insert  into `eventid`(`event_id`,`event_description`) values 
+(0,'Unknown'),
+(1,'None'),
+(2,'Generic out'),
+(3,'Strikeout'),
+(4,'Stolen base'),
+(5,'Defensive indifference'),
+(6,'Caught stealing'),
+(7,'Pickoff error'),
+(8,'Pickoff'),
+(9,'Wild pitch'),
+(10,'Passed ball'),
+(11,'Balk'), 
+(12,'Other advance or out advancing'),
+(13,'Foul error'),
+(14,'Walk'),
+(15,'Intentional walk'),
+(16,'Hit by pitch'),
+(17,'Interference'),
+(18,'Error'),
+(19,'Fielder’s choice'),
+(20,'Single'),
+(21,'Double'),
+(22,'Triple'),
+(23,'Home run'),
+(24,'Missing play')
+;
+
+USE `cardinals_at_bats`;
 
 -- -----------------------------------------------------
 -- Insert into Table `cardinals_at_bats`.`dim_player`
@@ -63,7 +146,7 @@ INSERT INTO cardinals_at_bats.dim_game (
     away_team_id
 FROM
 	(SELECT DISTINCT game_id, home_team_id, away_team_id
-    FROM mlb.mlbdatatransformations_2010) as games
+    FROM mlb.mlbdatatransformations) as games
     );
 
 -- -----------------------------------------------------
@@ -111,7 +194,7 @@ FROM
 		pos7_fld_id, 
 		pos8_fld_id,
 		pos9_fld_id  
-	FROM mlb.mlbdatatransformations_2010
+	FROM mlb.mlbdatatransformations
     GROUP BY pos2_fld_id, pos3_fld_id, pos4_fld_id,
 		pos5_fld_id, pos6_fld_id, pos7_fld_id, 
 		pos8_fld_id, pos9_fld_id ) as uniq_field_pos
@@ -122,7 +205,7 @@ FROM
 -- -----------------------------------------------------
 
 INSERT INTO cardinals_at_bats.dim_pitch (    
-	pitch,
+	pitch_id,
     pitch_description)
 (SELECT 
     pitch_id,
@@ -149,14 +232,15 @@ INSERT INTO cardinals_at_bats.dim_pitch_sequence (
     pitch_22, pitch_23, pitch_24, pitch_25, pitch_26, pitch_27, pitch_28,
     pitch_29, pitch_30
 FROM
-	mlb.mlbdatatransformations_2010);
+	mlb.mlbdatatransformations);
+
     
 -- -----------------------------------------------------
 -- Insert into Table `cardinals_at_bats`.`fact_at_bat`
 -- -----------------------------------------------------
 
 INSERT INTO cardinals_at_bats.fact_at_bat (    
-	game_id, inning, batter_id, batter_hand, result_batter_id,
+	game_id, date, inning, batter_id, batter_hand, result_batter_id,
 	result_batter_hand, pitcher_id, pitcher_hand, result_pitcher_id,
 	result_pitcher_hand, batter_team, outs_ct, balls_ct, strikes_ct, 
     pitch_sequence_id, away_score_ct, home_score_ct, in_field_position_id, 
@@ -176,7 +260,7 @@ INSERT INTO cardinals_at_bats.fact_at_bat (
     removed_for_pinch_hitter_id, removed_for_pinch_hitter_batter_field_position, po1_fld_cd, 
     po2_fld_cd, po3_fld_cd, ass1_fld_cd, ass2_fld_cd, ass3_fld_cd, ass4_fld_cd, ass5_fld_cd, at_bat_counter)
 (SELECT 
-    m.game_id, m.inning, m.batter_id, m.bat_hand_cd, m.result_batter_id,
+    m.game_id, m.date, m.inning, m.batter_id, m.bat_hand_cd, m.result_batter_id,
 	m.result_batter_hand, m.pitcher_id, m.pitcher_hand, m.result_pitcher_id,
 	m.result_pitcher_hand, m.batter_team, m.outs_ct, m.balls_ct, m.strikes_ct, 
     p.pitch_sequence_id, m.away_score_ct, m.home_score_ct, f.in_field_position_id, 
@@ -196,7 +280,7 @@ INSERT INTO cardinals_at_bats.fact_at_bat (
     m.removed_for_pinch_hitter_id, m.removed_for_pinch_hitter_batter_field_position, m.po1_fld_cd, 
     m.po2_fld_cd, m.po3_fld_cd, m.ass1_fld_cd, m.ass2_fld_cd, m.ass3_fld_cd, m.ass4_fld_cd, m.ass5_fld_cd, m.at_bat_counter
 FROM
-	mlb.mlbdatatransformations_2010 as m
+	mlb.mlbdatatransformations as m
     INNER JOIN
     dim_pitch_sequence as p ON p.pitch_sequence = m.pitch_sequence
     INNER JOIN

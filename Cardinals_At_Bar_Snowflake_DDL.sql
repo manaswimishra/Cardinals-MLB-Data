@@ -7,6 +7,25 @@
 ** Date:   11/12/2019
 ************************************************/
 
+
+/***********************************************/
+-- -----------------------------------------------------
+-- Create Event ID table in MLB
+-- -----------------------------------------------------
+
+use MLB;
+
+DROP TABLE IF EXISTS `eventid`;
+
+CREATE TABLE IF NOT EXISTS `MLB`.`eventid` (
+  `event_id` INT(2) NOT NULL,
+  `event_description` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`event_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+/***********************************************/
+
+
 # NOT ENTIRELY SURE WHAT THESE DO
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
@@ -145,7 +164,7 @@ DEFAULT CHARACTER SET = latin1;
 CREATE TABLE IF NOT EXISTS `cardinals_at_bats`.`dim_pitch` (
   `pitch_id` VARCHAR(10) NOT NULL,
   `pitch_description` VARCHAR(50) NULL DEFAULT NULL,
-  PRIMARY KEY (`pitch`))
+  PRIMARY KEY (`pitch_id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
@@ -287,6 +306,7 @@ DEFAULT CHARACTER SET = latin1;
 
 CREATE TABLE IF NOT EXISTS `cardinals_at_bats`.`fact_at_bat` (
   `at_bat_id` INT(15) NOT NULL AUTO_INCREMENT,
+  `date` DATETIME NOT NULL,
   `game_id` INT(9) NOT NULL,
   `inning` SMALLINT(1) NULL,
   `batter_id` VARCHAR(8) NOT NULL,
@@ -297,7 +317,7 @@ CREATE TABLE IF NOT EXISTS `cardinals_at_bats`.`fact_at_bat` (
   `pitcher_hand` ENUM('L','R') NULL,
   `result_pitcher_id` VARCHAR(8) NOT NULL,
   `result_pitcher_hand` ENUM('L','R') NULL,
-  `batter_team` BINARY(2) NULL,
+  `batter_team` SMALLINT(1) NULL,
   `outs_ct` SMALLINT(1) NULL,
   `balls_ct` SMALLINT(1) NULL,
   `strikes_ct` SMALLINT(1) NULL,
@@ -305,29 +325,29 @@ CREATE TABLE IF NOT EXISTS `cardinals_at_bats`.`fact_at_bat` (
   `away_score_ct` INT(2) NULL,
   `home_score_ct` INT(2) NULL,
   `in_field_position_id` INT(10) NOT NULL,
-  `base1_run_id` VARCHAR(8) NOT NULL,
-  `base2_run_id` VARCHAR(8) NOT NULL,
-  `base3_run_id` VARCHAR(8) NOT NULL,
+  `base1_run_id` VARCHAR(8) NULL,
+  `base2_run_id` VARCHAR(8) NULL,
+  `base3_run_id` VARCHAR(8) NULL,
   `event_tx` VARCHAR(45) NULL,
   `event_id` INT(2) NOT NULL,
-  `leadoff_fl` TINYINT(1) NULL,
-  `pinch_hit_fl` TINYINT(1) NULL,
+  `leadoff_fl` ENUM('true','false') NULL,
+  `pinch_hit_fl` ENUM('true','false') NULL,
   `batter_field_position` INT(2) NULL,
   `batter_lineup` INT(2) NULL,
-  `batter_event_fl`	TINYINT(1) NULL,
+  `batter_event_fl`	ENUM('true','false') NULL,
   `hit_value` SMALLINT(5) NULL,
-  `sacrifice_hit_fl` TINYINT(1) NULL,
-  `sacrifice_fly_fl` TINYINT(1) NULL,
+  `sacrifice_hit_fl` ENUM('true','false') NULL,
+  `sacrifice_fly_fl` ENUM('true','false') NULL,
   `event_outs_ct` SMALLINT(5) NULL,
-  `double_play_fl` TINYINT(1) NULL,
-  `triple_play_fl` TINYINT(1) NULL,
+  `double_play_fl` ENUM('true','false') NULL,
+  `triple_play_fl` ENUM('true','false') NULL,
   `rbi_ct` SMALLINT(1) NULL,
-  `wild_pitch_fl` TINYINT(1) NULL,
-  `passed_ball_fl` TINYINT(1) NULL,
+  `wild_pitch_fl` ENUM('true','false') NULL,
+  `passed_ball_fl` ENUM('true','false') NULL,
   `fielder_position` VARCHAR(8) NULL,
   `batted_ball_type` VARCHAR(1) NULL,
-  `bunt_fl` TINYINT(1) NULL,
-  `foul_fl` TINYINT(1) NULL,
+  `bunt_fl` ENUM('true','false') NULL,
+  `foul_fl` ENUM('true','false') NULL,
   `battedball_loc_tx` VARCHAR(3) NULL,
   `error_ct` SMALLINT(1) NULL,
   `error1_fielder` INT(1) NULL,
@@ -344,21 +364,21 @@ CREATE TABLE IF NOT EXISTS `cardinals_at_bats`.`fact_at_bat` (
   `run1_play_tx` VARCHAR(50) NULL,
   `run2_play_tx` VARCHAR(50) NULL,
   `run3_play_tx` VARCHAR(50) NULL,
-  `runner1_stolen_base_fl` TINYINT(1) NULL,
-  `runner2_stolen_base_fl` TINYINT(1) NULL,
-  `runner3_stolen_base_fl` TINYINT(1) NULL,
-  `runner1_caught_stealing_fl` TINYINT(1) NULL,
-  `runner2_caught_stealing_fl` TINYINT(1) NULL,
-  `runner3_caught_stealing_fl` TINYINT(1) NULL,
-  `runner1_picked_off_fl` TINYINT(1) NULL,
-  `runner2_picked_off_fl` TINYINT(1) NULL,
-  `runner3_picked_off_fl` TINYINT(1) NULL,
+  `runner1_stolen_base_fl` ENUM('true','false') NULL,
+  `runner2_stolen_base_fl` ENUM('true','false') NULL,
+  `runner3_stolen_base_fl` ENUM('true','false') NULL,
+  `runner1_caught_stealing_fl` ENUM('true','false') NULL,
+  `runner2_caught_stealing_fl` ENUM('true','false') NULL,
+  `runner3_caught_stealing_fl` ENUM('true','false') NULL,
+  `runner1_picked_off_fl` ENUM('true','false') NULL,
+  `runner2_picked_off_fl` ENUM('true','false') NULL,
+  `runner3_picked_off_fl` ENUM('true','false') NULL,
   `run1_resp_pit_id` VARCHAR(8) NULL,
   `run2_resp_pit_id` VARCHAR(8) NULL,
   `run3_resp_pit_id` VARCHAR(8) NULL,
-  `pinch_runner1_fl` TINYINT(1) NULL,
-  `pinch_runner2_fl` TINYINT(1) NULL,
-  `pinch_runner3_fl` TINYINT(1) NULL,
+  `pinch_runner1_fl` ENUM('true','false') NULL,
+  `pinch_runner2_fl` ENUM('true','false') NULL,
+  `pinch_runner3_fl` ENUM('true','false') NULL,
   `removed_for_pinch_runner1_id` VARCHAR(8) NULL,
   `removed_for_pinch_runner2_id` VARCHAR(8) NULL,
   `removed_for_pinch_runner3_id` VARCHAR(8) NULL,
