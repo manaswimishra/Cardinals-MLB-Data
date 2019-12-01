@@ -20,6 +20,8 @@ CHANGE COLUMN `date` `date` DATETIME NULL DEFAULT NULL ;
 -- Update Empty Columns to NULL in MLB data
 -- -----------------------------------------------------
 
+SET SQL_SAFE_UPDATES = 0;
+
 UPDATE mlb.mlbdatatransformations
 SET
 	base1_run_id = CASE base1_run_id WHEN '' THEN NULL ELSE base1_run_id END,
@@ -54,8 +56,17 @@ SET
     pitch_27 = CASE pitch_27 WHEN '' THEN NULL ELSE pitch_27 END,
     pitch_28 = CASE pitch_28 WHEN '' THEN NULL ELSE pitch_28 END,
     pitch_29 = CASE pitch_29 WHEN '' THEN NULL ELSE pitch_29 END,
-    pitch_30 = CASE pitch_30 WHEN '' THEN NULL ELSE pitch_30 END
-;
+    pitch_30 = CASE pitch_30 WHEN '' THEN NULL ELSE pitch_30 END;
+
+-- -----------------------------------------------------
+-- Consolidate MIA and FLO team ids
+# have to manually change FLO to MIA since the team changed Abbreviations
+-- -----------------------------------------------------
+
+UPDATE mlb.mlbdatatransformations
+SET
+	home_team_id = CASE home_team_id WHEN 'FLO' THEN 'MIA' ELSE home_team_id END,
+    away_team_id = CASE away_team_id WHEN 'FLO' THEN 'MIA' ELSE away_team_id END;
 
 -- -----------------------------------------------------
 -- Insert into Event ID table in MLB
@@ -146,7 +157,7 @@ INSERT INTO cardinals_at_bats.dim_game (
     away_team_id
 FROM
 	(SELECT DISTINCT game_id, home_team_id, away_team_id
-    FROM mlb.mlbdatatransformations) as games
+    FROM MLB.mlbdatatransformations) as games
     );
 
 -- -----------------------------------------------------
@@ -224,7 +235,7 @@ INSERT INTO cardinals_at_bats.dim_pitch_sequence (
     pitch_15, pitch_16, pitch_17, pitch_18, pitch_19, pitch_20, pitch_21,
     pitch_22, pitch_23, pitch_24, pitch_25, pitch_26, pitch_27, pitch_28,
     pitch_29, pitch_30)
-(SELECT 
+(SELECT DISTINCT
     pitch_sequence,
     pitch_1, pitch_2, pitch_3, pitch_4, pitch_5, pitch_6, pitch_7,
     pitch_8, pitch_9, pitch_10, pitch_11, pitch_12, pitch_13, pitch_14,
