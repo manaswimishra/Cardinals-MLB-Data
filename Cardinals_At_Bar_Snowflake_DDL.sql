@@ -393,6 +393,8 @@ CREATE TABLE IF NOT EXISTS `cardinals_at_bats`.`fact_at_bat` (
   `ass4_fld_cd`	INT(1) NULL,
   `ass5_fld_cd`	INT(1) NULL,
   `at_bat_counter` INT(3) NULL,
+  `game_new_fl` ENUM('true','false') NULL,
+  `game_end_fl` ENUM('true','false') NULL,
   PRIMARY KEY (`at_bat_id`),
 	INDEX `fk_fact_at_bat_dim_game_idx` (`game_id` ASC),
     INDEX `fk_fact_at_bat_dim_Player_idx1` (`batter_id` ASC),
