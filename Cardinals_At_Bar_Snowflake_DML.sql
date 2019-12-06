@@ -22,7 +22,7 @@ CHANGE COLUMN `date` `date` DATETIME NULL DEFAULT NULL ;
 
 SET SQL_SAFE_UPDATES = 0;
 
-UPDATE mlb.mlbdatatransformations
+UPDATE MLB.mlbdatatransformations
 SET
 	base1_run_id = CASE base1_run_id WHEN '' THEN NULL ELSE base1_run_id END,
     base2_run_id = CASE base2_run_id WHEN '' THEN NULL ELSE base2_run_id END,
@@ -63,7 +63,7 @@ SET
 # have to manually change FLO to MIA since the team changed Abbreviations
 -- -----------------------------------------------------
 
-UPDATE mlb.mlbdatatransformations
+UPDATE MLB.mlbdatatransformations
 SET
 	home_team_id = CASE home_team_id WHEN 'FLO' THEN 'MIA' ELSE home_team_id END,
     away_team_id = CASE away_team_id WHEN 'FLO' THEN 'MIA' ELSE away_team_id END;
@@ -114,7 +114,7 @@ INSERT INTO cardinals_at_bats.dim_player (
 (SELECT 
     ID, First, Last
 FROM
-    mlb.playerids);
+    MLB.playerids);
     
 -- -----------------------------------------------------
 -- Insert into Table `cardinals_at_bats`.`dim_ballpark`
@@ -127,7 +127,7 @@ INSERT INTO cardinals_at_bats.dim_ballpark (
 (SELECT 
     PARKID, NAME, AKA
 FROM
-    mlb.ballparkid);
+    MLB.ballparkid);
     
 -- -----------------------------------------------------
 -- Insert into Table `cardinals_at_bats`.`dim_team`
@@ -141,7 +141,7 @@ INSERT INTO cardinals_at_bats.dim_team (
 (SELECT 
     TeamAbbreviation, League, City, Nickname
 FROM
-    mlb.teamid);
+    MLB.teamid);
     
 -- -----------------------------------------------------
 -- Insert into Table `cardinals_at_bats`.`dim_game`
@@ -171,7 +171,7 @@ INSERT INTO cardinals_at_bats.dim_event (
     event_id,
     event_description
 FROM
-	mlb.eventid); 
+	MLB.eventid); 
     
 -- -------------------------------------------------------------
 -- Insert into Table `cardinals_at_bats`.`dim_in_field_position`
@@ -205,7 +205,7 @@ FROM
 		pos7_fld_id, 
 		pos8_fld_id,
 		pos9_fld_id  
-	FROM mlb.mlbdatatransformations
+	FROM MLB.mlbdatatransformations
     GROUP BY pos2_fld_id, pos3_fld_id, pos4_fld_id,
 		pos5_fld_id, pos6_fld_id, pos7_fld_id, 
 		pos8_fld_id, pos9_fld_id ) as uniq_field_pos
@@ -222,7 +222,7 @@ INSERT INTO cardinals_at_bats.dim_pitch (
     pitch_id,
     pitch_description
 FROM
-	mlb.pitchid); 
+	MLB.pitchid); 
     
 -- ----------------------------------------------------------
 -- Insert into Table `cardinals_at_bats`.`dim_pitch_sequence`
@@ -243,7 +243,7 @@ INSERT INTO cardinals_at_bats.dim_pitch_sequence (
     pitch_22, pitch_23, pitch_24, pitch_25, pitch_26, pitch_27, pitch_28,
     pitch_29, pitch_30
 FROM
-	mlb.mlbdatatransformations);
+	MLB.mlbdatatransformations);
 
     
 -- -----------------------------------------------------
@@ -269,7 +269,8 @@ INSERT INTO cardinals_at_bats.fact_at_bat (
     run3_resp_pit_id, pinch_runner1_fl, pinch_runner2_fl, pinch_runner3_fl, 
     removed_for_pinch_runner1_id, removed_for_pinch_runner2_id, removed_for_pinch_runner3_id, 
     removed_for_pinch_hitter_id, removed_for_pinch_hitter_batter_field_position, po1_fld_cd, 
-    po2_fld_cd, po3_fld_cd, ass1_fld_cd, ass2_fld_cd, ass3_fld_cd, ass4_fld_cd, ass5_fld_cd, at_bat_counter)
+    po2_fld_cd, po3_fld_cd, ass1_fld_cd, ass2_fld_cd, ass3_fld_cd, ass4_fld_cd, ass5_fld_cd, at_bat_counter, 
+    game_new_fl, game_end_fl)
 (SELECT 
     m.game_id, m.date, m.inning, m.batter_id, m.bat_hand_cd, m.result_batter_id,
 	m.result_batter_hand, m.pitcher_id, m.pitcher_hand, m.result_pitcher_id,
@@ -289,9 +290,10 @@ INSERT INTO cardinals_at_bats.fact_at_bat (
     m.run3_resp_pit_id, m.pinch_runner1_fl, m.pinch_runner2_fl, m.pinch_runner3_fl, 
     m.removed_for_pinch_runner1_id, m.removed_for_pinch_runner2_id, m.removed_for_pinch_runner3_id, 
     m.removed_for_pinch_hitter_id, m.removed_for_pinch_hitter_batter_field_position, m.po1_fld_cd, 
-    m.po2_fld_cd, m.po3_fld_cd, m.ass1_fld_cd, m.ass2_fld_cd, m.ass3_fld_cd, m.ass4_fld_cd, m.ass5_fld_cd, m.at_bat_counter
+    m.po2_fld_cd, m.po3_fld_cd, m.ass1_fld_cd, m.ass2_fld_cd, m.ass3_fld_cd, m.ass4_fld_cd, m.ass5_fld_cd, m.at_bat_counter,
+    m.game_new_fl, m.game_end_fl
 FROM
-	mlb.mlbdatatransformations as m
+	MLB.mlbdatatransformations as m
     INNER JOIN
     dim_pitch_sequence as p ON p.pitch_sequence = m.pitch_sequence
     INNER JOIN
