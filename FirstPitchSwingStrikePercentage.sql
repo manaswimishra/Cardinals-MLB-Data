@@ -1,5 +1,5 @@
-SELECT
-	d.batter_id as `Player`,
+SELECT 
+    d.batter_id AS `Player`,
     (d.Single + d.Double + d.Triple + d.HomeRun) / (d.AtBat - d.SacFly - d.SacHit) AS `BA`,
     (d.TotalBases) / (d.AtBat - d.SacFly - d.SacHit) AS `Slugging`,
     (d.Single + d.Double + d.Triple + d.HomeRun + d.Walk + d.IntentionalWalk + d.HitByPitch) / (d.AtBat - d.SacFly - d.SacHit + d.Walk + d.IntentionalWalk + d.HitByPitch) + (1 * d.Single + 2 * d.Double + 3 * d.Triple + 4 * d.HomeRun) / (d.AtBat - d.SacFly - d.SacHit) AS `OPS`,
@@ -59,7 +59,7 @@ FROM
                 ELSE 0
             END) AS `TotalBases`,
             SUM(CASE
-                WHEN pitch_1 IN ('F', 'B') THEN 1
+                WHEN pitch_1 IN ('F' , 'B') THEN 1
                 ELSE 0
             END) / (COUNT(pitch_1)) AS `FirstPitchSwingStrikePercentage`
     FROM
@@ -68,4 +68,4 @@ FROM
         LEFT(GAME_ID, 4) = '2018'
     GROUP BY BATTER_ID
     ORDER BY HomeRun DESC) AS d
-    ORDER BY d.AtBat DESC
+ORDER BY d.AtBat DESC
